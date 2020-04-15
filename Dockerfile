@@ -5,7 +5,9 @@ WORKDIR /usr/src/app
 RUN set -ex \
     && npm install -g pm2
 
-COPY ./node_modules ./node_modules
+COPY ./*.json /
+RUN npm ci
+
 COPY ./middleware ./middleware
 COPY ./routes ./routes
 COPY ./models ./models
