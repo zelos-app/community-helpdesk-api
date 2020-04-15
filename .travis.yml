@@ -13,7 +13,6 @@ jobs:
       before_script:
         - npm ci
       script:
-        - npm run build
         - docker build -t covidhelp/covidhelp-api:latest -t covidhelp/covidhelp-api:${TRAVIS_COMMIT::8} .
       after_success:
         - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USER}" --password-stdin
