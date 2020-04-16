@@ -7,7 +7,7 @@ services:
     ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "rootuser"
+      MONGO_INITDB_ROOT_USERNAME: "root"
       MONGO_INITDB_ROOT_PASSWORD: "rootpassword"
       MONGO_INITDB_DATABASE: "covid-help-dev"
     volumes:
