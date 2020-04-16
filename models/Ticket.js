@@ -28,9 +28,9 @@ const commentSchema = new mongoose.Schema({
 const ticketSchema = new mongoose.Schema({
     name: String,
     phone: String,
-    area: mongoose.ObjectId,
     address: String,
     request: String,
+    area: mongoose.ObjectId,
     category: mongoose.ObjectId,
     owner: mongoose.ObjectId,
     createdAt: {
@@ -220,9 +220,18 @@ class Ticket {
         const ticket = await this.get();
         if (ticket.status && ticket.status.approved) {
             const err = createError(409, {
-                status: "error",
-                message: "Conflicting statuses",
-                status: ticket.status
+                message: {
+                    status: "error",
+                    message: `Ticket already approved`
+                },
+            });
+            throw err;
+        } else if (ticket.status && ticket.status.rejected) {
+            const err = createError(409, {
+                message: {
+                    status: "error",
+                    message: `Can't approve a ticket that has been already rejected`
+                },
             });
             throw err;
         }
@@ -261,29 +270,23 @@ class Ticket {
             console.error(`[!] Failed to create a task:\n${err}`);
         }
         // Send a text
-        const sendText = (query.notify !== "false" && process.env.SEND_REJECT_TEXT);
-        try {
-            if (sendText) {
-                console.log(`sending a text`)
+        if (process.env.SEND_ACCEPT_TEXT === "true" && !query.skiptext) {
+            try {
+                console.log(`[d] Sending a notification text`)
                 const sms = new SMS();
-                const result = await sms.send(ticket.phone, templates.acceptText);
-                if (result) {
-                    ticket.status.notified = true;
-                }
+                sms.send(ticket.phone, templates.acceptText);
+            } catch (err) {
+                console.error(`[!] Failed to send a text:\n${err}`)
             }
-        } catch (err) {
-            console.error(`[!] Failed to send a text:\n${err}`)
+        } else {
+            console.log(`[d] Skipping notification text`)
         }
         // update ticket
         ticket.status.approved = true
-        ticket.save()
-        const response = {}
-        if (ticket.status.task.created && (ticket.status.notified || !sendText)) {
-            response.status = "ok"
-            response.taskUrl = ticket.status.task.url
-        } else {
-            response.status = "warning"
-            response.message = `Something went wrong. Task created: ${(ticket.status.task.created ? "yes" : "no")}. SMS sent: ${(ticket.status.notified ? "yes" : "no")}`
+        // ticket.save()
+        const response = {
+            status: "ok",
+            taskUrl: ticket.status.task.url
         }
         return response;
     }

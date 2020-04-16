@@ -6,13 +6,7 @@ const Ticket = require(appRoot + "/models/Ticket");
 const handleError = require(appRoot + "/middleware/HandleError");
 
 // List all tickets
-tickets.get("/", checkSchema(validation.listTickets), async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      errors: errors.array(),
-    });
-  }
+tickets.get("/", async (req, res) => {
   try {
     const ticket = new Ticket();
     const result = await ticket.list({
@@ -30,10 +24,15 @@ tickets.get("/", checkSchema(validation.listTickets), async (req, res) => {
 });
 
 // Create a ticket
-tickets.post("/", async (req, res) => {
+tickets.post("/", checkSchema(validation.addTicket), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      errors: errors.array(),
+    });
+  }
   const ticket = new Ticket();
   try {
-    // unvalidated
     const id = await ticket.add(
       {
         ...req.body,
@@ -95,7 +94,7 @@ tickets.put("/:id", async (req, res) => {
 });
 
 // Approve ticket
-tickets.put("/:id/approve", async (req, res) => {
+tickets.put("/:id/approve", checkSchema(validation.approveTicket), async (req, res) => {
   try {
     const ticket = new Ticket(req.params.id);
     const result = await ticket.approve(req.query);

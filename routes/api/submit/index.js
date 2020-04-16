@@ -21,7 +21,7 @@ submit.post('/', async (req, res) => {
     }
 })
 
-submit.get('/', async (req, res) => {
+submit.get('/', checkSchema(validation.addTicket), async (req, res) => {
     try {
         // unvalidated
         const category = new Category();
