@@ -268,6 +268,13 @@ class Ticket {
             }
         } catch (err) {
             console.error(`[!] Failed to create a task:\n${err}`);
+            const error = createError(500, {
+                message: {
+                    status: "error",
+                    message: `Failed to create a task on Zelos. Check your workspace settings`
+                },
+            });
+            throw error;
         }
         // Send a text
         if (process.env.SEND_ACCEPT_TEXT === "true" && !query.skiptext) {
