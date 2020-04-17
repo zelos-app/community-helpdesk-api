@@ -9,7 +9,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: "root"
       MONGO_INITDB_ROOT_PASSWORD: "rootpassword"
-      MONGO_INITDB_DATABASE: "covid-help-dev"
+      MONGO_INITDB_DATABASE: "community-helpdesk"
     volumes:
       - mongodb:/data/db
 
