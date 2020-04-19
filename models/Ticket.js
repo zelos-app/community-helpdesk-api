@@ -44,12 +44,9 @@ const ticketSchema = new mongoose.Schema({
         resolved: Boolean,
         archived: Boolean,
         notified: Boolean,
-        task: {
-            created: Boolean,
-            url: String
-        }
     },
-    activity: [activitySchema]
+    activity: [activitySchema],
+    task: String,
 },
 {
     minimize: false
@@ -145,25 +142,31 @@ class Ticket {
     }
 
     // Resolve a ticket
-    async resolve(comment) {
+    async resolve(comment, user) {
         const ticket = await this.get();
         if (ticket.status && !(ticket.status.approved || ticket.status.resolved)) {
             if (comment) {
-                this.addComment(comment, req.user._id)
+                this.addComment(comment, user)
             }
-            ticket.status.solved = true;
-            this.activity.push({
+            ticket.status.resolved = true;
+            ticket.activity.push({
                 action: "Ticket marked as resolved 👏",
                 source: {
-                    user: owner
+                    user: user
                 }
             })
             await ticket.save();
+            return {
+                status: "ok",
+                message: "Ticket resolved"
+            }
         } else {
             const err = createError(409, {
-                status: "error",
-                message: "Conflicting statuses",
-                status: ticket.status
+                message: {
+                    status: "error",
+                    message: `Ticket has already been moderated`,
+                    state: ticket.status
+                }
             });
             throw err;
         }
@@ -207,9 +210,11 @@ class Ticket {
             return {status: "ok", message: "Ticket rejected"}
         } else {
             const err = createError(409, {
-                status: "error",
-                message: "Conflicting statuses",
-                status: ticket.status
+                message: {
+                    status: "error",
+                    message: "Conflicting statuses",
+                    state: ticket.status
+                }
             });
             throw err;
         }
@@ -235,8 +240,8 @@ class Ticket {
             });
             throw err;
         }
-        const area = await new Area(ticket.area).get();
         // create an object for task creation input
+        const area = await new Area(ticket.area).get();
         const templates = await config.get("templates");
         const taskDetails = {
             privateFields: {
@@ -257,15 +262,7 @@ class Ticket {
         try {
             const zelos = new Zelos();
             await zelos.init();
-            this.taskUrl = await zelos.newTask(taskDetails);
-            if (this.taskUrl) {
-                ticket.status = {
-                    task: {
-                        url: this.taskUrl,
-                        created: true
-                    }
-                }
-            }
+            ticket.task = await zelos.newTask(taskDetails);
         } catch (err) {
             console.error(`[!] Failed to create a task:\n${err}`);
             const error = createError(500, {
@@ -290,10 +287,10 @@ class Ticket {
         }
         // update ticket
         ticket.status.approved = true
-        // ticket.save()
+        ticket.save()
         const response = {
             status: "ok",
-            taskUrl: ticket.status.task.url
+            task: ticket.task
         }
         return response;
     }

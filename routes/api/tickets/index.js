@@ -60,7 +60,6 @@ tickets.put("/:id/assign", async (req, res) => {
 // Clear ticket owner
 tickets.delete("/:id/assign", async (req, res) => {
   try {
-    // unvalidated
     const ticket = new Ticket(req.params.id);
     result = await ticket.unassign();
     res.send(result);
@@ -72,7 +71,6 @@ tickets.delete("/:id/assign", async (req, res) => {
 // Get a single ticket
 tickets.get("/:id", async (req, res) => {
   try {
-    // unvalidated
     const ticket = new Ticket(req.params.id);
     result = await ticket.get();
     res.send(result);
@@ -84,7 +82,6 @@ tickets.get("/:id", async (req, res) => {
 // Update ticket details
 tickets.put("/:id", async (req, res) => {
   try {
-    // unvalidated
     const ticket = new Ticket(req.params.id);
     result = await ticket.update(req.body);
     res.send(result);
@@ -97,7 +94,7 @@ tickets.put("/:id", async (req, res) => {
 tickets.put("/:id/approve", checkSchema(validation.approveTicket), async (req, res) => {
   try {
     const ticket = new Ticket(req.params.id);
-    const result = await ticket.approve(req.query);
+    const result = await ticket.approve(req.body.comment, req.user._id);
     res.send(result);
   } catch (err) {
     handleError(err, res);
@@ -108,7 +105,7 @@ tickets.put("/:id/approve", checkSchema(validation.approveTicket), async (req, r
 tickets.put("/:id/resolve", async (req, res) => {
   try {
     const ticket = new Ticket(req.params.id);
-    const result = await ticket.resolve()
+    const result = await ticket.resolve(req.body.comment, req.user._id)
     res.send(result);
   } catch (err) {
     handleError(err, res);
@@ -118,6 +115,7 @@ tickets.put("/:id/resolve", async (req, res) => {
 // Reject ticket
 tickets.put("/:id/reject", async (req, res) => {
   try {
+    const ticket = new Ticket(req.params.id);
     const result = await ticket.reject(req.body.comment, req.user._id, req.query.notify)
     res.send(result)
   } catch (err) {
