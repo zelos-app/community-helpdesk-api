@@ -54,11 +54,7 @@ class Config {
     async get(subject, toObject = false) {
         let config = await ConfigModel.findOne();
         if (subject) {
-            if (toObject) {
-                return config[subject].toObject();    
-            } else {
-                return config[subject]
-            }
+            return config[subject]
         } else {
             if (toObject) {
                     return config.toObject();

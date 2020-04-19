@@ -36,8 +36,10 @@ async function init() {
     ) {
       // Add default admin
       const User = require("./models/User");
-      const user = new User();
-      await user.initDefault();
+      new User().initDefault();
+      // Add default locale
+      const Locale = require("./models/Locale");
+      new Locale().initDefault();
     }
   } catch (err) {
     console.error(err.stack);
