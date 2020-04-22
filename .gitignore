@@ -4,6 +4,8 @@ staging.env
 production.env
 test.js
 .vscode
-acme.json
+**/*.json
+!**/*.example.json
+!locales.json
 **/*.env
 !**/*.example.env

@@ -184,9 +184,7 @@ function isTokenValid(exp) {
 }
 
 function saveTokens(config, tokens) {
-    config.zelos = {
-        tokens: tokens
-    }
+    config.zelos.tokens = tokens
     config.save();
 }
 

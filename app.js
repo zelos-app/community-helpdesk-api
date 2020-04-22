@@ -9,7 +9,7 @@ const getDuration = require("./middleware/Timer");
 const Config = require("./models/Config");
 
 // Connect to DB
-mongoose.connect(process.env.DB_URL, {
+mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.APP_ID}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   auth: {
@@ -24,25 +24,16 @@ db.once("open", () => {
   console.log(`[i] Database connection successful`);
 });
 
-// Initialize
+// Initialize configuration
 async function init() {
   try {
-    const config = new Config();
-    await config.check();
-    if (
-      process.env.ADMIN_CREATE &&
-      process.env.ADMIN_EMAIL &&
-      process.env.ADMIN_PASSWORD
-    ) {
-      // Add default admin
-      const User = require("./models/User");
-      new User().initDefault();
-      // Add default locale
-      const Locale = require("./models/Locale");
-      new Locale().initDefault();
-    }
+    const config = await new Config()
+    await config.init();
+    // DEBUG
+    // const Zelos = require('./models/Zelos')
+    // new Zelos().init();
   } catch (err) {
-    console.error(err.stack);
+    console.error(err);
   }
 }
 
