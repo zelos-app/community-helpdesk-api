@@ -9,7 +9,7 @@ class Mailgun {
       Authorization: `Basic ${key}`,
     };
     this.params = {
-      from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_EMAIL}>`,
+      from: `${process.env.WORKSPACE_NAME} <${process.env.MAILGUN_FROM_EMAIL}>`,
       to: email,
     };
   }
