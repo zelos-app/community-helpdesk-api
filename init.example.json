@@ -1,0 +1,12 @@
+{
+  "name": "Community Helpdesk",
+  "admin": {
+    "email": "you@email.com",
+    "password": "password"
+  },
+  "zelos": {
+    "subdomain": "xxxx-xxxx-xxxx",
+    "email": "your_zelos_account_email@domain.com",
+    "password": "your_zelos_password"
+  }
+}
