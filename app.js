@@ -9,7 +9,7 @@ const getDuration = require("./middleware/Timer");
 const Config = require("./models/Config");
 
 // Connect to DB
-mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.APP_ID}`, {
+mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.WORKSPACE_ID}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   auth: {
@@ -21,7 +21,7 @@ mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.APP_ID}`, {
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
-  console.log(`[i] Database connection successful`);
+  console.log(`[i] Using "${process.env.WORKSPACE_ID}" as the database`);
 });
 
 // Initialize configuration
