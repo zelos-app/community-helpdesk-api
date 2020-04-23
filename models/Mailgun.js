@@ -2,14 +2,12 @@ const axios = require("axios");
 
 class Mailgun {
   constructor(email) {
-    const key = Buffer.from(`api:${process.env.MAILGUN_API_KEY}`)
-      .toString("base64")
-      .toString("utf8");
+    const key = Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString("base64").toString("utf8");
     this.headers = {
       Authorization: `Basic ${key}`,
     };
     this.params = {
-      from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_EMAIL}>`,
+      from: `${process.env.WORKSPACE_NAME} <${process.env.MAILGUN_FROM_EMAIL}>`,
       to: email,
     };
   }

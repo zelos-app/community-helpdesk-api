@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const createError = require('http-errors');
 const Area = require(`./Area`);
 const Zelos = require(`./Zelos`);
-const SMS = require(`./${process.env.SMS_PROVIDER}`);
 const Config = require(`./Config`);
 
 const config = new Config();
@@ -192,9 +191,10 @@ class Ticket {
             try {
                 if (sendText && process.env.SEND_REJECT_TEXT) {
                     console.log(`[d] Sending reject message`);
-                    const sms = new SMS();
+                    const SMS = require(`./${process.env.SMS_PROVIDER}`);
+                    const text = new SMS();
                     const templates = await config.get("templates");
-                    const result = await sms.send(ticket.phone, templates.rejectText);
+                    const result = await text.send(ticket.phone, templates.rejectText);
                     if (result) {
                         ticket.status.notified = true;
                     }
@@ -277,8 +277,9 @@ class Ticket {
         if (process.env.SEND_ACCEPT_TEXT === "true" && !query.skiptext) {
             try {
                 console.log(`[d] Sending a notification text`)
-                const sms = new SMS();
-                sms.send(ticket.phone, templates.acceptText);
+                const SMS = require(`./${process.env.SMS_PROVIDER}`);
+                const text = new SMS();
+                text.send(ticket.phone, templates.acceptText);
             } catch (err) {
                 console.error(`[!] Failed to send a text:\n${err}`)
             }

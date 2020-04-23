@@ -34,7 +34,7 @@ class User {
     }
 
     // invite an user
-    async add(email, admin = false) {
+    async invite(email, admin = false) {
         const user = await UserModel.findOne({email: email})
         if (user === null) {
             const user = new UserModel();
@@ -43,11 +43,10 @@ class User {
             // create a password reset token
             user.credentials.resetToken = newToken();
             // email an invite
-            if (process.env.SEND_INVITE_EMAIL) {
+            if (!process.env.DEV) {
                 const invite = new Mailgun(user.email);
-                invite.send(`Invitation to ${process.env.APP_NAME}`, `Hello,\n\nYou have been invited to join the team at ${process.env.APP_DOMAIN}.\nGet started by finish creating your account at ${process.env.APP_URL}/auth/register/${user.credentials.resetToken}`);
-            }
-            if (process.env.LOG_INVITE_CODE) {
+                invite.send(`Invitation to ${process.env.WORKSPACE_NAME}`, `Hello,\n\nYou have been invited to join the team at ${process.env.WORKSPACE_NAME}.\n\nGet started by finish creating your account at https://${process.env.APP_ID}.${process.env.APP_HOST}/auth/register/${user.credentials.resetToken}`);
+            } else {
                 console.log(`[d] Invite token for ${user.email}: "${user.credentials.resetToken}"`);
             }
             const result = await user.save();
@@ -61,6 +60,14 @@ class User {
             });
             throw err;
         }      
+    }
+
+    async createAdmin(email, password) {
+        const user = new UserModel();
+        user.email = email;
+        user.status.admin = true;
+        user.credentials.password = await bcrypt.hash(password, 10);
+        await user.save();
     }
 
     // create an account
@@ -151,7 +158,7 @@ class User {
             if (user && user.status.registered) {
                 user.credentials.resetToken = newToken();
                 const invite = new Mailgun(user.email);
-                await invite.send(`Password reset`, `Hello,\n\nA password reset has been requested for your account at ${process.env.APP_DOMAIN}.\nYou can set a new password here: ${process.env.APP_URL}/auth/reset-password/${user.credentials.resetToken}\n\nIf you didn't ask for this reset you can safely ignore this letter`);
+                await invite.send(`Password reset`, `Hello,\n\nA password reset has been requested for your account at ${process.env.WORKSPACE_NAME}.\nYou can set a new password here: https://${process.env.APP_ID}.${process.env.APP_HOST}/auth/reset-password/${user.credentials.resetToken}\n\nIf you didn't ask for this reset you can safely ignore this letter`);
                 user.save();
             } else if (user && !user.status.registered) {
                 console.log(`[w] Got Password reset request for non-activated account: ${email}`);

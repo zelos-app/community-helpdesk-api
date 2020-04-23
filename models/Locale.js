@@ -107,14 +107,12 @@ class Locale {
     }
     async update(id, fields) {
         const result = await LocaleModel.updateOne({ _id: id }, {...fields});
-        console.log(result);
         return {status: "ok"}
     }
     async initDefault() {
         try {
             const defaultLocale = await this.add("English", "en");
             await this.update(defaultLocale.id, {active: true})
-            console.log(`[i] Added default locale`)
         } catch (err) {
             if (err.status !== 409) {
                 throw err;

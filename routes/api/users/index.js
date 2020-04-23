@@ -10,7 +10,7 @@ users.post('/invite', async (req, res) => {
     try {
         const user = new User();
         const admin = req.body.admin ? true : false;
-        const result = await user.add(req.body.email, admin);
+        const result = await user.invite(req.body.email, admin);
         res.send(result);
     } catch (err) {
         handleError(err, res);
