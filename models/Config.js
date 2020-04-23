@@ -4,8 +4,7 @@ const cryptr = new Cryptr(process.env.PRIVATE_KEY);
 
 const configSchema = new mongoose.Schema({
     workspace: {
-        name: String,
-        id: String
+        name: String
     },
     zelos: {
         subdomain: String,
@@ -121,20 +120,17 @@ class Config {
     async initDatabase() {
         try {
             console.log(`[i] Setting up a new database`);
-            // Load setup values
-            const init = require('../init.json');
             // Set up workspace details
             const config = new ConfigModel();
-            config.workspace.name = init.name;
-            config.workspace.id = init.id;
+            config.workspace.name = process.env.INIT_WORKSPACE_NAME;
             // Create admin account
-            console.log(`[d] Creating admin account for ${init.admin.email}`);
+            console.log(`[d] Creating admin account for ${process.env.INIT_ADMIN_EMAIL}`);
             const User = require("./User");
-            await new User().createAdmin(init.admin.email, init.admin.password);
+            await new User().createAdmin(process.env.INIT_ADMIN_EMAIL, process.env.INIT_ADMIN_PASSWORD);
             // Set up Zelos connection
-            config.zelos.subdomain = init.zelos.subdomain;
-            config.zelos.email = init.zelos.email;
-            config.zelos.password = cryptr.encrypt(init.zelos.password);
+            config.zelos.subdomain = process.env.INIT_ZELOS_SUBDOMAIN;
+            config.zelos.email = process.env.INIT_ZELOS_EMAIL;
+            config.zelos.password = cryptr.encrypt(process.env.INIT_ZELOS_PASSWORD);
             await config.save();
         } catch (err) {
             console.error(`[!] Something went wrong during database setup:\n${err.stack}`)
