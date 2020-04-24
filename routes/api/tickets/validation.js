@@ -1,4 +1,9 @@
-const phoneRegex = new RegExp(`^\\+${process.env.PHONE_PREFIX}\\d\{${process.env.PHONE_MINLENGTH},${process.env.PHONE_MAXLENGTH}}\$`)
+let phoneRegex;
+if (process.env.PHONE_PREFIX && process.env.PHONE_MINLENGTH && process.env.PHONE_MAXLENGTH) {
+    phoneRegex = new RegExp(`^\\+${process.env.PHONE_PREFIX}\\d\{${process.env.PHONE_MINLENGTH},${process.env.PHONE_MAXLENGTH}}\$`)
+} else {
+    phoneRegex = /\+\d+/
+}
 
 const validation = {
     addTicket: {
