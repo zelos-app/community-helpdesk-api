@@ -24,7 +24,7 @@ class Infobip {
         req.messages.push({
             "from": this.sender,
             "destinations": [{
-                "to": number
+                "to": process.env.PHONE_PREFIX + number
             }],
             "text": text
         })

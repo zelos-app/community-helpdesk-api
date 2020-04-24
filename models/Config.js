@@ -15,7 +15,10 @@ const configSchema = new mongoose.Schema({
         tokens: Object,
     },
     sms: {
-        prefix: Number,
+        prefix: {
+            type: Number,
+            default: 372
+        },
         minLength: Number,
         maxLength: Number,
         sendRejectText: {type: Boolean, default: false},
@@ -141,10 +144,6 @@ class Config {
         try {
             console.log(`[i] Creating default user and content`);
             await this.load();
-            // Add sample area
-            console.log(`[d] Adding sample area`);
-            const Area = require('./Area');
-            await new Area().add({name: "Sample Area"});;
             // Add sample category
             console.log(`[d] Adding sample category`);
             const Category = require('./Category');
@@ -153,6 +152,10 @@ class Config {
             console.log(`[d] Adding default locale`);
             const Locale = require("./Locale");
             await new Locale().initDefault();
+            // Add sample area
+            console.log(`[d] Adding sample area`);
+            const Area = require('./Area');
+            await new Area().add({name: "Sample Area"});;
         } catch (err) {
             console.error(`[!] Something went wrong during database setup:\n${err.stack}`)
         }

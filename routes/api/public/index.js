@@ -43,8 +43,10 @@ public.get('/options', async (req, res) => {
             status: "ok",
             categories: allCategories,
             areas: allAreas,
-            validation: {
-                phoneRegex: `^\\+${process.env.PHONE_PREFIX}\\d\{${process.env.PHONE_MINLENGTH},${process.env.PHONE_MAXLENGTH}}\$`
+            phone: {
+                prefix: process.env.PHONE_PREFIX,
+                minLength: process.env.PHONE_MINLENGTH,
+                maxLength: process.env.PHONE_MAXLENGTH
             }
         }
         res.send(result);

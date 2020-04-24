@@ -26,7 +26,7 @@ const commentSchema = new mongoose.Schema({
 
 const ticketSchema = new mongoose.Schema({
     name: String,
-    phone: String,
+    phone: Number,
     address: String,
     request: String,
     area: mongoose.ObjectId,

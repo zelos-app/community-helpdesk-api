@@ -12,9 +12,7 @@ const validation = {
             escape: true
         },
         phone: {
-            matches: {
-                options: [phoneRegex, 'g']
-            }
+            isInt: true,
         },
         request: {
             isString: true,
