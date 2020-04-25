@@ -16,7 +16,25 @@ settings.get('/', async (req, res) => {
     }
 })
 
-settings.put('/', checkSchema(validation.updateSettings), async (req, res) => {
+settings.get('/:category', async (req, res) => {
+    if (validation.hasOwnProperty(req.params.category)) {
+        try {
+            let config = await new Config().get(req.params.category, true);
+            config = config.toObject()
+            delete config.tokens;
+            delete config.password;
+            res.send(config);
+        } catch (err) {
+            handleError(err, res);
+        }
+    } else {
+        res.status("404").send("No such category")
+    }
+})
+
+// I don't know how to pass request params to checkschema so I could do checkSchema(validation[category]) and avoid having multiple endpoints
+
+settings.put('/workspace', checkSchema(validation.workspace), async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({
@@ -24,11 +42,42 @@ settings.put('/', checkSchema(validation.updateSettings), async (req, res) => {
         });
     }
     try {
-        const result = await new Config().update(req.body);
+        const result = await new Config().update("workspace", req.body);
         res.send(result);
     } catch (err) {
         handleError(err, res);
     }
 })
+
+settings.put('/zelos', checkSchema(validation.zelos), async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({
+            errors: errors.array(),
+        });
+    }
+    try {
+        const result = await new Config().update("zelos", req.body);
+        res.send(result);
+    } catch (err) {
+        handleError(err, res);
+    }
+})
+
+settings.put('/sms', checkSchema(validation.sms), async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({
+            errors: errors.array(),
+        });
+    }
+    try {
+        const result = await new Config().update("sms", req.body);
+        res.send(result);
+    } catch (err) {
+        handleError(err, res);
+    }
+})
+
 
 module.exports = settings;

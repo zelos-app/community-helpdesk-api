@@ -12,6 +12,10 @@ const configSchema = new mongoose.Schema({
         password: String,
         confirmAssignment: {type: Boolean, default: true},
         confirmCompletion: {type: Boolean, default: false},
+        safetyWarning: {
+            type: String,
+            default: ""
+        },
         tokens: Object,
     },
     sms: {
@@ -24,21 +28,10 @@ const configSchema = new mongoose.Schema({
         sendRejectText: {type: Boolean, default: false},
         sendAcceptText: {type: Boolean, default: false},
         fromName: String,
-        provider: {
-            type: String,
-            default: "Infobip"
+        Infobip: {
+            baseUrl: String,
+            apiKey: String
         },
-        providers: {
-            Infobip: {
-                baseUrl: String,
-                apiKey: String
-            },
-            Twilio: {
-                apiKey: String,
-            }
-        }
-    },
-    templates: {
         acceptText: {
             type: String,
             default: "Your request has been accepted and published to volunteers in your area"
@@ -46,14 +39,9 @@ const configSchema = new mongoose.Schema({
         rejectText: {
             type: String,
             default: "Unfortunately we can't accept your request. It maybe have not met the requirements or was missing crucial details"
-        },
-        safetyWarning: {
-            type: String,
-            default: ""
         }
     }
 }, {
-    strict: false,
     minimize: false
 });
 
@@ -76,9 +64,8 @@ class Config {
         const config = await this.get(null, true);
         const cryptr = new Cryptr(process.env.PRIVATE_KEY);
         // SMS settings
-        process.env.INFOBIP_BASE_URL = config.sms.providers.Infobip.baseUrl;
-        process.env.INFOBIP_API_KEY = config.sms.providers.Infobip.apiKey;
-        process.env.SMS_PROVIDER = config.sms.provider;
+        process.env.INFOBIP_BASE_URL = config.sms.Infobip.baseUrl;
+        process.env.INFOBIP_API_KEY = config.sms.Infobip.apiKey;
         process.env.SMS_FROM_NAME = config.sms.fromName;
         process.env.SEND_ACCEPT_TEXT = config.sms.sendAcceptText;
         process.env.SEND_REJECT_TEXT = config.sms.sendRejectText;
@@ -108,11 +95,13 @@ class Config {
         }
     }
     
-    async update(settings) {
-        if (settings.zelos.password) {
-            settings.zelos.password = cryptr.encrypt(settings.zelos.password)
-            console.log(settings.zelos.password)
+    async update(category, data) {
+        if (data.password) {
+            data.password = cryptr.encrypt(data.password)
         }  
+        const settings = {
+            [category]: data
+        }
         const config = await ConfigModel.findOne();
         config.set(settings)
         await config.save();

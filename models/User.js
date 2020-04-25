@@ -45,7 +45,8 @@ class User {
             // email an invite
             if (!process.env.DEV) {
                 const invite = new Mailgun(user.email);
-                invite.send(`Invitation to ${process.env.WORKSPACE_NAME}`, `Hello,\n\nYou have been invited to join the team at ${process.env.WORKSPACE_NAME}.\n\nGet started by finish creating your account at https://${process.env.APP_ID}.${process.env.APP_HOST}/auth/register/${user.credentials.resetToken}`);
+                const link = `https://${process.env.WORKSPACE_ID}.${process.env.APP_HOST}/auth/register/${user.credentials.resetToken}`
+                invite.send(`Invitation to ${process.env.WORKSPACE_NAME}`, `Hello,\n\nYou have been invited to join the team at ${process.env.WORKSPACE_NAME}.\n\nGet started by finish creating your account at ${link}`);
             } else {
                 console.log(`[d] Invite token for ${user.email}: "${user.credentials.resetToken}"`);
             }

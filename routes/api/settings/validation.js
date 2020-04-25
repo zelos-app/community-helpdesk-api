@@ -1,52 +1,51 @@
 const validation = {
-    updateSettings: {
-        "workspace.name": {
+    zelos: {
+        confirmAssignment: {
+            isBoolean: true
+        },
+        confirmCompletion: {
+            isBoolean: true
+        },
+        subdomain: {
             isString: true,
             escape: true
         },
-        "zelos.confirmAssignment": {
-            isBoolean: true
-        },
-        "zelos.confirmCompletion": {
-            isBoolean: true
-        },
-        "zelos.subdomain": {
-            isString: true,
-            escape: true
-        },
-        "zelos.email": {
+        email: {
             isEmail: true,
             escape: true,
         },
-        "zelos.password": {
+        password: {
             optional: true,
         },
-        "sms.prefix": {
+    },
+    workspace: {
+        name: {
+            isString: true,
+            escape: true
+        }
+    },
+    sms: {
+        prefix: {
             isInt: true
         },
-        "sms.sendRejectText": {
+        sendRejectText: {
             isBoolean: true
         },
-        "sms.sendAcceptText": {
+        sendAcceptText: {
             isBoolean: true
         },
-        "sms.provider": {
+        provider: {
             isString: true,
             escape: true
         },
-        "templates.acceptText": {
+        acceptText: {
             isString: true,
             escape: true
         },
-        "templates.rejectText": {
+        rejectText: {
             isString: true,
             escape: true
         },
-        "templates.safetyWarning": {
-            isString: true,
-            escape: true,
-            optional: true
-        }
     }
 }
 

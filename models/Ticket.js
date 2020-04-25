@@ -193,8 +193,8 @@ class Ticket {
                     console.log(`[d] Sending reject message`);
                     const SMS = require(`./${process.env.SMS_PROVIDER}`);
                     const text = new SMS();
-                    const templates = await config.get("templates");
-                    const result = await text.send(ticket.phone, templates.rejectText);
+                    const config = await config.get("sms");
+                    const result = await text.send(ticket.phone, config.rejectText);
                     if (result) {
                         ticket.status.notified = true;
                     }
@@ -242,13 +242,13 @@ class Ticket {
         }
         // create an object for task creation input
         const area = await new Area(ticket.area).get();
-        const templates = await config.get("templates");
+        const templates = await config.get("zelos");
         const taskDetails = {
             privateFields: {
                 name: ticket.name,
                 phone: ticket.phone,
                 address:  ticket.address,
-                instructions: templates.safetyWarning
+                instructions: zelos.safetyWarning
             },
             publicFields: {
                 request: ticket.request
@@ -277,9 +277,10 @@ class Ticket {
         if (process.env.SEND_ACCEPT_TEXT === "true" && !query.skiptext) {
             try {
                 console.log(`[d] Sending a notification text`)
-                const SMS = require(`./${process.env.SMS_PROVIDER}`);
+                const SMS = require(`./Infobip}`);
                 const text = new SMS();
-                text.send(ticket.phone, templates.acceptText);
+                const config = await config.get("sms");
+                text.send(ticket.phone, config.acceptText);
             } catch (err) {
                 console.error(`[!] Failed to send a text:\n${err}`)
             }
