@@ -70,17 +70,10 @@ const localeSchema = new mongoose.Schema({
 const LocaleModel = mongoose.model('Locale', localeSchema)
 
 class Locale {
-    async list(filter) {
-        const locales = await LocaleModel.find();
-        if (filter === "active") {
-            const activeLocales = locales.map(el => {
-                if (el.active) return el
-            })
-            return activeLocales;
-        } else if (filter === "all") {
-            return locales;
-        }
-        
+    async list(active) {
+        const filter = active ? {active: true} : null
+        const locales = await LocaleModel.find(filter);
+        return locales; 
     }
     async add(name, code) {
         const result = await LocaleModel.findOne({code: code});

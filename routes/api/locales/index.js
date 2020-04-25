@@ -19,8 +19,8 @@ locales.post('/', async (req, res) => {
 // List all locales
 locales.get('/', async (req, res) => {
     try {
-        const filter = req.query.filter ? req.query.filter : "all"
-        const result = await new Locale().list(filter);
+        const active = req.query.active ? true : false
+        const result = await new Locale().list(active);
         res.send(result);
     } catch (err) {
         handleError(err, res);
