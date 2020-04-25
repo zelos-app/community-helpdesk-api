@@ -8,7 +8,8 @@ const areas = require("./areas");
 const users = require("./users");
 const auth = require("./auth");
 const locales = require("./locales");
-const public = require("./public")
+const public = require("./public");
+const settings = require("./settings");
 
 // to be deprecated
 const submit = require("./submit");
@@ -21,5 +22,6 @@ routes.use("/users", authorize, users);
 routes.use("/auth", auth);
 routes.use("/locales", authorize, locales);
 routes.use("/public", public);
+routes.use("/settings", authorize, settings);
 
 module.exports = routes;

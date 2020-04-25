@@ -41,7 +41,7 @@ const configSchema = new mongoose.Schema({
     templates: {
         acceptText: {
             type: String,
-            default: "Your request has been accepted and published to volunteers"
+            default: "Your request has been accepted and published to volunteers in your area"
         },
         rejectText: {
             type: String,
@@ -109,10 +109,12 @@ class Config {
     }
     
     async update(settings) {
-        const config = this.get();
-        config = {
-            ...settings
-        };
+        if (settings.zelos.password) {
+            settings.zelos.password = cryptr.encrypt(settings.zelos.password)
+            console.log(settings.zelos.password)
+        }  
+        const config = await ConfigModel.findOne();
+        config.set(settings)
         await config.save();
         this.load();
         return {
