@@ -11,6 +11,7 @@ const auth = require("./auth");
 const locales = require("./locales");
 const public = require("./public");
 const settings = require("./settings");
+const health = require("./health");
 
 // to be deprecated
 const submit = require("./submit");
@@ -24,5 +25,6 @@ routes.use("/auth", auth);
 routes.use("/locales", authenticate, authorize, locales);
 routes.use("/public", public);
 routes.use("/settings", authenticate, authorize, settings);
+routes.use("/health", health), 
 
 module.exports = routes;
