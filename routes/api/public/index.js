@@ -19,7 +19,8 @@ public.post('/tickets', checkSchema(validation.addTicket), async (req, res) => {
     }
     // create a ticket
     const ticket = new Ticket();
-    const data = matchedData(req.body);
+    const data = matchedData(req);
+    console.log(data)
     try {
         const id = await ticket.add({
             ...data

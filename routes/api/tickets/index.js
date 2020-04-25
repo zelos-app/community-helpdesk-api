@@ -1,5 +1,5 @@
 const tickets = require("express").Router();
-const { checkSchema, validationResult } = require("express-validator");
+const { checkSchema, validationResult, matchedData } = require("express-validator");
 const validation = require("./validation.js");
 const appRoot = require("app-root-path");
 const Ticket = require(appRoot + "/models/Ticket");
@@ -32,10 +32,11 @@ tickets.post("/", checkSchema(validation.addTicket), async (req, res) => {
     });
   }
   const ticket = new Ticket();
+  const data = matchedData(req);
   try {
     const id = await ticket.add(
       {
-        ...req.body,
+        ...data,
       },
       req.user._id
     );
