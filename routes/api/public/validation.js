@@ -14,7 +14,7 @@ const validation = {
         area: {
             isMongoId: true
         },
-        type: {
+        category: {
             isMongoId: true
         },
         address: {
