@@ -248,7 +248,7 @@ class Ticket {
                 name: ticket.name,
                 phone: ticket.phone,
                 address:  ticket.address,
-                instructions: zelos.safetyWarning
+                instructions: teplates.safetyWarning
             },
             publicFields: {
                 request: ticket.request

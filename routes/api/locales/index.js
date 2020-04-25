@@ -3,7 +3,6 @@ const locales = require('express').Router();
 // const validation = require('./validation.js');
 const appRoot = require('app-root-path');
 const handleError = require(appRoot + '/middleware/HandleError');
-const authorize = require(appRoot + "/middleware/Auth");
 const Locale = require(appRoot + '/models/Locale');
 
 // Create a locale
