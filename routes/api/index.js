@@ -1,6 +1,7 @@
 const routes = require("express").Router();
 const appRoot = require("app-root-path");
-const authorize = require(appRoot + "/middleware/Auth");
+const authenticate = require(appRoot + "/middleware/Authenticate");
+const authorize = require(appRoot + "/middleware/Authorize");
 
 const tickets = require("./tickets");
 const categories = require("./categories");
@@ -15,13 +16,13 @@ const settings = require("./settings");
 const submit = require("./submit");
 routes.use("/submit", submit);
 
-routes.use("/tickets", authorize, tickets);
-routes.use("/categories", authorize, categories);
-routes.use("/areas", authorize, areas);
-routes.use("/users", authorize, users);
+routes.use("/tickets", authenticate, tickets);
+routes.use("/categories", authenticate, authorize, categories);
+routes.use("/areas", authenticate, authorize, areas);
+routes.use("/users", authenticate, authorize, users);
 routes.use("/auth", auth);
-routes.use("/locales", authorize, locales);
+routes.use("/locales", authenticate, authorize, locales);
 routes.use("/public", public);
-routes.use("/settings", authorize, settings);
+routes.use("/settings", authenticate, authorize, settings);
 
 module.exports = routes;
