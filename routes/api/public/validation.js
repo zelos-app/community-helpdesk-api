@@ -2,14 +2,14 @@ const validation = {
     addTicket: {
         name: {
             isString: true,
-            escape: true
+            blacklist: '<>'
         },
         phone: {
             isInt: true
         },
         request: {
             isString: true,
-            escape: true
+            blacklist: '<>'
         },
         area: {
             isMongoId: true
@@ -19,8 +19,8 @@ const validation = {
         },
         address: {
             isString: true,
-            escape: true,
-            optional: true
+            optional: true,
+            blacklist: '<>'
         }
     }
 }

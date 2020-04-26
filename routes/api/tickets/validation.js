@@ -2,17 +2,22 @@ const validation = {
     addTicket: {
         name: {
             isString: true,
-            escape: true
+            blacklist: '<>'
         },
         phone: {
             isInt: true,
         },
         request: {
             isString: true,
-            escape: true
+            blacklist: '<>'
         },
         area: {
             isMongoId: true
+        },
+        adress: {
+            isString: true,
+            optional: true,
+            blacklist: '<>'
         },
         category: {
             isMongoId: true
@@ -24,7 +29,6 @@ const validation = {
             toBoolean: {
                 strict: true,
             }
-
         }
     }
 }
