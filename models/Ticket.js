@@ -38,11 +38,12 @@ const ticketSchema = new mongoose.Schema({
     },
     comments: [commentSchema],
     status: {
-        rejected: Boolean,
-        approved: Boolean,
-        resolved: Boolean,
-        archived: Boolean,
-        notified: Boolean,
+        type: String,
+        default: "new"
+    },
+    notified: {
+        type: Boolean,
+        default: false
     },
     activity: [activitySchema],
     task: String,
@@ -143,11 +144,11 @@ class Ticket {
     // Resolve a ticket
     async resolve(comment, user) {
         const ticket = await this.get();
-        if (ticket.status && !(ticket.status.approved || ticket.status.resolved)) {
+        if (ticket.status === "new") {
             if (comment) {
                 this.addComment(comment, user)
             }
-            ticket.status.resolved = true;
+            ticket.status = "resolved";
             ticket.activity.push({
                 action: "Ticket marked as resolved 👏",
                 source: {
@@ -164,7 +165,7 @@ class Ticket {
                 message: {
                     status: "error",
                     message: `Ticket has already been moderated`,
-                    state: ticket.status
+                    ticketStatus: ticket.status
                 }
             });
             throw err;
@@ -174,12 +175,12 @@ class Ticket {
     // Reject a ticket
     async reject(comment, user, notify) {
         const ticket = await this.get();
-        if (ticket.status && !(ticket.status.approved || ticket.status.resolved)) {
+        if (ticket.status === "new") {
             // Add a comment if requested
             if (comment && user) {
                 this.addComment(comment, user)
             }
-            ticket.status.rejected = true;
+            ticket.status = "rejected";
             ticket.activity.push({
                 action: "Ticket rejected",
                 source: {
@@ -196,10 +197,10 @@ class Ticket {
                     const config = await config.get("sms");
                     const result = await text.send(ticket.phone, config.rejectText);
                     if (result) {
-                        ticket.status.notified = true;
+                        ticket.notified = true;
                     }
                 } else {
-                    ticket.status.notified = false
+                    ticket.notified = false
                     console.log(`[d] Skipping reject message. Global: ${process.env.SEND_REJECT_TEXT}. Query: ${notify}`)
                 }
             } catch (err) {
@@ -213,7 +214,7 @@ class Ticket {
                 message: {
                     status: "error",
                     message: "Conflicting statuses",
-                    state: ticket.status
+                    ticketStatus: ticket.status
                 }
             });
             throw err;
@@ -223,7 +224,7 @@ class Ticket {
     // Approve a ticket
     async approve(query) {
         const ticket = await this.get();
-        if (ticket.status && ticket.status.approved) {
+        if (ticket.status === "approved") {
             const err = createError(409, {
                 message: {
                     status: "error",
@@ -231,7 +232,7 @@ class Ticket {
                 },
             });
             throw err;
-        } else if (ticket.status && ticket.status.rejected) {
+        } else if (ticket.status === "rejected") {
             const err = createError(409, {
                 message: {
                     status: "error",
@@ -288,7 +289,7 @@ class Ticket {
             console.log(`[d] Skipping notification text`)
         }
         // update ticket
-        ticket.status.approved = true
+        ticket.status = "approved"
         ticket.save()
         const response = {
             status: "ok",
