@@ -7,8 +7,8 @@ const localeSchema = new mongoose.Schema({
     active: {type: Boolean, default: false},
     landing: {
         content: {
-            header: {type: String, default: "Community Helpdesk"},
-            body: {type: String, default: "This app allows you to request help from volunteers or volunteer to help others"}
+            header: {type: String, default: "Zelos Community Helpdesk"},
+            body: {type: String, default: "Zelos Community Helpdesk connects people who need help with volunteers who are willing to help others"}
         },
         buttons: {
             request: {type: String, default: "I need help"},
@@ -18,7 +18,7 @@ const localeSchema = new mongoose.Schema({
     selectCategory: {
         content: {
             header: {type: String, default: "Select the kind of help you need"},
-            body: {type: String, default: "Choose the category that's closest to what you need"},
+            body: {type: String, default: "Choose a category that’s closest to the kind of help you need"},
             or: {type: String, default: "or"}
         },
         buttons: {
@@ -27,11 +27,11 @@ const localeSchema = new mongoose.Schema({
     },
     writeRequest: {
         content: {
-            header: {type: String, default: "How could people help you?"},
-            body: {type: String, default: "Please describe your problem"}
+            header: {type: String, default: "How can we help you?"},
+            body: {type: String, default: "Please describe what kind of help you need."}
         },
         placeholders: {
-            request: {type: String, default: "For example: I need groceries delivered, will place the order online myself"}
+            request: {type: String, default: "For example: I need groceries delivered. I will place the order online myself and would like a volunteer to pick them up and bring them home for me"}
         },
         buttons: {
             back: {type: String, default: "Back"},
@@ -40,8 +40,8 @@ const localeSchema = new mongoose.Schema({
     },
     addContact: {
         content: {
-            header: {type: String, default: "Leave your contact details"},
-            body: {type: String, default: "How can helpers find and contact you?"}
+            header: {type: String, default: "Please leave your contact details"},
+            body: {type: String, default: "Write your address and phone number so your assigned helper can find and contact you."}
         },
         placeholders: {
             name: {type: String, default: "Name"},
@@ -51,13 +51,13 @@ const localeSchema = new mongoose.Schema({
         },
         buttons: {
             back: {type: String, default: "Back"},
-            next: {type: String, default: "Sumbit"}
+            next: {type: String, default: "Submit"}
         }
     },
     confirmation: {
         content: {
-            header: {type: String, default: "Request received"},
-            body: {type: String, default: "We'll notify you as soon as your request has been accepted!"}
+            header: {type: String, default: "Your help request has been received"},
+            body: {type: String, default: "We are now processing your request and will send you a message as soon as your request has been accepted. Have a nice day!"}
         },
         buttons: {
             home: {type: String, default: "Home"}
