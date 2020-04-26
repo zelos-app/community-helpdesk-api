@@ -243,13 +243,13 @@ class Ticket {
         }
         // create an object for task creation input
         const area = await new Area(ticket.area).get();
-        const templates = await config.get("zelos");
+        const settings = await config.get("zelos");
         const taskDetails = {
             privateFields: {
                 name: ticket.name,
                 phone: ticket.phone,
                 address:  ticket.address,
-                instructions: teplates.safetyWarning
+                instructions: settings.safetyWarning
             },
             publicFields: {
                 request: ticket.request
