@@ -114,6 +114,7 @@ class Ticket {
     // Update a ticket
     async update(fields) {
         for (const [key, value] of Object.entries(fields)) {
+            if (key === "owner" && value === "") continue;
             this.data[key] = value;
         }
         await TicketModel.updateOne({ _id: this.id }, {...this.data});
