@@ -119,6 +119,7 @@ class User {
                     token: token,
                     exp: payload.exp
                 }
+                console.log(`[d] User "${email}" logged in`)
                 return result;
             } else {
                 const error = createError(401, {
@@ -128,6 +129,7 @@ class User {
                 throw error
             }
         } else {
+            console.log(`[d] Non-existent user "${email}" tried to log in`)
             const error = createError(404, {
                 status: "error",
                 message: "No user with this email"
