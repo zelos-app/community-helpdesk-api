@@ -1,23 +1,20 @@
 const validation = {
     addTicket: {
         name: {
-            isString: true,
-            blacklist: '<>'
+            isString: true
         },
         phone: {
             isInt: true,
         },
         request: {
-            isString: true,
-            blacklist: '<>'
+            isString: true
         },
         area: {
             isMongoId: true
         },
         adress: {
             isString: true,
-            optional: true,
-            blacklist: '<>'
+            optional: true
         },
         category: {
             isMongoId: true
