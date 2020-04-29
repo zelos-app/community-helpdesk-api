@@ -62,6 +62,12 @@ const localeSchema = new mongoose.Schema({
         buttons: {
             home: {type: String, default: "Home"}
         }
+    },
+    appLanding: {
+        content: {
+            header: {type: String, default: "Help someone in your community!"},
+            body: {type: String, default: "- Install the Zelos Team Management app by clicking the buttons below.\n- Join the workspace \"COVID-help-ESTONIA\"\n-Join groups of locations near you\n- Get notifications about people in need in your area"}
+        }
     }
 }, {
     minimize: false
