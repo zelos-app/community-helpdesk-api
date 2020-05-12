@@ -12,7 +12,7 @@ const validation = {
         area: {
             isMongoId: true
         },
-        adress: {
+        address: {
             isString: true,
             optional: true
         },
