@@ -34,13 +34,13 @@ settings.get('/:category', async (req, res) => {
 
 // I don't know how to pass request params to checkschema so I could do checkSchema(validation[category]) and avoid having multiple endpoints
 
-settings.put('/workspace', checkSchema(validation.workspace), async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({
-            errors: errors.array(),
-        });
-    }
+settings.put('/workspace', async (req, res) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     return res.status(422).json({
+    //         errors: errors.array(),
+    //     });
+    // }
     try {
         const result = await new Config().update("workspace", req.body);
         res.send(result);
@@ -49,13 +49,13 @@ settings.put('/workspace', checkSchema(validation.workspace), async (req, res) =
     }
 })
 
-settings.put('/zelos', checkSchema(validation.zelos), async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({
-            errors: errors.array(),
-        });
-    }
+settings.put('/zelos', async (req, res) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     return res.status(422).json({
+    //         errors: errors.array(),
+    //     });
+    // }
     try {
         const result = await new Config().update("zelos", req.body);
         res.send(result);
@@ -64,13 +64,13 @@ settings.put('/zelos', checkSchema(validation.zelos), async (req, res) => {
     }
 })
 
-settings.put('/sms', checkSchema(validation.sms), async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({
-            errors: errors.array(),
-        });
-    }
+settings.put('/sms', async (req, res) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     return res.status(422).json({
+    //         errors: errors.array(),
+    //     });
+    // }
     try {
         const result = await new Config().update("sms", req.body);
         res.send(result);

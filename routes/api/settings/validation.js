@@ -7,12 +7,10 @@ const validation = {
             isBoolean: true
         },
         subdomain: {
-            isString: true,
-            escape: true
+            isString: true
         },
         email: {
-            isEmail: true,
-            escape: true,
+            isEmail: true
         },
         password: {
             optional: true,
@@ -21,30 +19,38 @@ const validation = {
     workspace: {
         name: {
             isString: true,
-            escape: true
         }
     },
     sms: {
         prefix: {
-            isInt: true
+            isInt: true,
+            optional: true
         },
         sendRejectText: {
-            isBoolean: true
+            isBoolean: true,
+            optional: true
         },
         sendAcceptText: {
-            isBoolean: true
-        },
-        provider: {
-            isString: true,
-            escape: true
+            isBoolean: true,
+            optional: true
         },
         acceptText: {
             isString: true,
-            escape: true
+            optional: true
         },
         rejectText: {
             isString: true,
-            escape: true
+            optional: true
+        },
+        Infobip: {
+            baseUrl: {
+                isString: true,
+                optional: true
+            },
+            apiKey: {
+                isString: true,
+                optional: true
+            }
         },
     }
 }
